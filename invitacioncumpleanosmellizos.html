@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Cumpleaños #3 de los Mellizos!</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts: Fredoka & Quicksand para toque infantil y legible -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        boy1: {
+                            light: '#E0F2FE',
+                            DEFAULT: '#0284C7',
+                            dark: '#0369A1'
+                        },
+                        boy2: {
+                            light: '#CCFBF1',
+                            DEFAULT: '#0D9488',
+                            dark: '#0F766E'
+                        },
+                        party: {
+                            yellow: '#FBBF24',
+                            lime: '#84CC16',
+                            orange: '#F97316',
+                            purple: '#8B5CF6'
+                        }
+                    },
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        quicksand: ['Quicksand', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #e0e7ff 50%, #ccfbf1 100%);
+            overflow-x: hidden;
+        }
+
+        .title-font {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* Canvas de Confeti */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* Efecto Card Flip 3D */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Globos Flotantes */
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            opacity: 0.85;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            animation: floatUp 12s infinite linear;
+            z-index: 10;
+        }
+        .balloon:hover {
+            transform: scale(1.15);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.9;
+            }
+            50% {
+                transform: translateY(-60vh) rotate(10deg);
+            }
+            100% {
+                transform: translateY(-120vh) rotate(-10deg);
+                opacity: 0.2;
+            }
+        }
+
+        /* Animación de pulso resplandeciente */
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(2, 132, 199, 0.6)); }
+            50% { filter: drop-shadow(0 0 25px rgba(13, 148, 136, 0.8)); }
+        }
+        .glow-effect {
+            animation: glow 3s infinite ease-in-out;
+        }
+
+        /* Estilo para los botones principales */
+        .btn-bounce {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-bounce:hover {
+            transform: translateY(-4px) scale(1.03);
+        }
+        .btn-bounce:active {
+            transform: translateY(2px) scale(0.98);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-gray-800 pb-12">
+
+    <!-- Canvas para animación de Confeti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Contenedor de Globos Animados -->
+    <div id="balloon-container" class="fixed inset-0 pointer-events-none overflow-hidden z-10"></div>
+
+    <!-- Botón Flotante para Personalizar Datos -->
+    <button onclick="toggleEditModal()" class="fixed top-4 right-4 z-40 bg-white/90 backdrop-blur-md hover:bg-white text-gray-700 font-bold p-3 rounded-full shadow-lg border border-sky-300 flex items-center gap-2 transition duration-300">
+        <i class="fa-solid fa-pen-to-square text-boy1-dark"></i>
+        <span class="text-xs sm:text-sm hidden sm:inline">Editar Datos</span>
+    </button>
+
+    <!-- Encabezado Principal -->
+    <header class="relative pt-10 pb-6 text-center z-20 px-4">
+        <div class="inline-block bg-white/70 backdrop-blur-md px-6 py-2 rounded-full border border-sky-200 shadow-sm mb-4">
+            <span class="title-font text-sky-700 font-bold tracking-wide uppercase text-sm sm:text-base flex items-center gap-2 justify-center">
+                ⚡ ¡2 VECES MÁS DIVERSIÓN Y AVENTURA! ⚡
+            </span>
+        </div>
+        <h1 class="title-font text-4xl sm:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-boy1-dark via-party-lime to-boy2-dark glow-effect mb-2">
+            ¡LOS MELLIZOS CUMPLEN #3!
+        </h1>
+        <p class="text-lg sm:text-xl font-bold text-gray-600">
+            Nuestros dos campeones invitan a su gran fiesta de superhéroes
+        </p>
+    </header>
+
+    <!-- Tarjetas 3D Interactivas de los Mellizos Varones -->
+    <section class="max-w-4xl mx-auto px-4 my-6 z-20 relative">
+        <p class="text-center text-xs text-sky-700 font-bold mb-3 uppercase tracking-wider">
+            ✨ Toca las tarjetas para descubrir sus superpoderes ✨
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Tarjeta Mellizo 1 (Mateo / Azul Superhéroe) -->
+            <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
+                <div class="card-inner relative w-full h-full duration-700 transform-style-3d shadow-xl rounded-3xl">
+                    <!-- Frente -->
+                    <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-sky-100 to-boy1-light border-4 border-boy1 rounded-3xl p-6 flex flex-col items-center justify-center backface-hidden shadow-inner">
+                        <div class="w-32 h-32 rounded-full border-4 border-white shadow-md overflow-hidden mb-4 bg-white flex items-center justify-center relative">
+                            <img id="img-twin1" src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=400" alt="Mellizo 1" class="w-full h-full object-cover">
+                            <div class="absolute bottom-0 right-0 bg-boy1 text-white text-xs px-2 py-0.5 rounded-tl-lg font-bold">#3</div>
+                        </div>
+                        <h3 id="display-twin1-name" class="title-font text-3xl font-bold text-boy1-dark">Mateo</h3>
+                        <p class="text-sm font-bold text-sky-600 mt-1">El Veloz del Equipo 🏎️</p>
+                        <span class="mt-4 text-xs font-bold bg-white/90 px-3 py-1 rounded-full text-sky-800 shadow-sm border border-sky-200">
+                            Toca para ver superpoder 🔄
+                        </span>
+                    </div>
+                    <!-- Reverso -->
+                    <div class="absolute inset-0 w-full h-full bg-boy1 text-white rounded-3xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-inner">
+                        <i class="fa-solid fa-bolt text-4xl text-party-yellow mb-3"></i>
+                        <h4 class="title-font text-2xl font-bold mb-2">Superpoderes de Mateo</h4>
+                        <p class="text-center text-sm leading-relaxed font-medium">
+                            ⚡ Velocidad sónica con sus autos de carreras.<br>
+                            🦖 Experto domador de dinosaurios.<br>
+                            ¡Le encanta comer pastel de chocolate!
+                        </p>
+                        <span class="mt-6 text-xs bg-white/20 px-3 py-1 rounded-full text-white font-bold">
+                            Toca para volver 🔄
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta Mellizo 2 (Lucas / Turquesa-Verde Aventurero) -->
+            <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
+                <div class="card-inner relative w-full h-full duration-700 transform-style-3d shadow-xl rounded-3xl">
+                    <!-- Frente -->
+                    <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-teal-100 to-boy2-light border-4 border-boy2 rounded-3xl p-6 flex flex-col items-center justify-center backface-hidden shadow-inner">
+                        <div class="w-32 h-32 rounded-full border-4 border-white shadow-md overflow-hidden mb-4 bg-white flex items-center justify-center relative">
+                            <img id="img-twin2" src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=400" alt="Mellizo 2" class="w-full h-full object-cover">
+                            <div class="absolute bottom-0 right-0 bg-boy2 text-white text-xs px-2 py-0.5 rounded-tl-lg font-bold">#3</div>
+                        </div>
+                        <h3 id="display-twin2-name" class="title-font text-3xl font-bold text-boy2-dark">Lucas</h3>
+                        <p class="text-sm font-bold text-teal-600 mt-1">El Gran Explorador ⚽</p>
+                        <span class="mt-4 text-xs font-bold bg-white/90 px-3 py-1 rounded-full text-teal-800 shadow-sm border border-teal-200">
+                            Toca para ver superpoder 🔄
+                        </span>
+                    </div>
+                    <!-- Reverso -->
+                    <div class="absolute inset-0 w-full h-full bg-boy2 text-white rounded-3xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-inner">
+                        <i class="fa-solid fa-shield-halved text-4xl text-party-yellow mb-3"></i>
+                        <h4 class="title-font text-2xl font-bold mb-2">Superpoderes de Lucas</h4>
+                        <p class="text-center text-sm leading-relaxed font-medium">
+                            ⚽ Tiros imparables con la pelota.<br>
+                            🦸‍♂️ Capa invisibilidad para jugar a las atrapadas.<br>
+                            ¡Listo para saltar en el inflable!
+                        </p>
+                        <span class="mt-6 text-xs bg-white/20 px-3 py-1 rounded-full text-white font-bold">
+                            Toca para volver 🔄
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Seccion de Cuenta Regresiva -->
+    <section class="max-w-xl mx-auto px-4 my-8 z-20 relative">
+        <div class="bg-white/85 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white text-center">
+            <h3 class="title-font text-xl font-bold text-gray-700 mb-4 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-stopwatch text-boy1"></i> Cuenta Regresiva para la Misión #3
+            </h3>
+            <div class="grid grid-cols-4 gap-2 sm:gap-4">
+                <div class="bg-gradient-to-b from-sky-100 to-white p-3 rounded-2xl border border-sky-300 shadow-sm">
+                    <span id="countdown-days" class="title-font text-2xl sm:text-4xl font-extrabold text-boy1-dark">00</span>
+                    <span class="block text-xs font-bold text-gray-500 uppercase mt-1">Días</span>
+                </div>
+                <div class="bg-gradient-to-b from-teal-100 to-white p-3 rounded-2xl border border-teal-300 shadow-sm">
+                    <span id="countdown-hours" class="title-font text-2xl sm:text-4xl font-extrabold text-boy2-dark">00</span>
+                    <span class="block text-xs font-bold text-gray-500 uppercase mt-1">Horas</span>
+                </div>
+                <div class="bg-gradient-to-b from-yellow-100 to-white p-3 rounded-2xl border border-yellow-300 shadow-sm">
+                    <span id="countdown-minutes" class="title-font text-2xl sm:text-4xl font-extrabold text-party-orange">00</span>
+                    <span class="block text-xs font-bold text-gray-500 uppercase mt-1">Min</span>
+                </div>
+                <div class="bg-gradient-to-b from-lime-100 to-white p-3 rounded-2xl border border-lime-300 shadow-sm">
+                    <span id="countdown-seconds" class="title-font text-2xl sm:text-4xl font-extrabold text-party-lime">00</span>
+                    <span class="block text-xs font-bold text-gray-500 uppercase mt-1">Seg</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detalles del Evento -->
+    <section class="max-w-2xl mx-auto px-4 my-8 z-20 relative">
+        <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-white">
+            <h2 class="title-font text-2xl sm:text-3xl font-bold text-center text-sky-800 mb-6 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-location-crosshairs text-boy2"></i> ¿Cuándo y Dónde?
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Fecha y Hora -->
+                <div class="flex items-start gap-4 p-4 rounded-2xl bg-sky-50 border border-sky-200">
+                    <div class="p-3 bg-boy1 text-white rounded-2xl shadow-md">
+                        <i class="fa-solid fa-calendar-check text-2xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="title-font font-bold text-gray-800 text-lg">Fecha y Hora</h4>
+                        <p id="display-date" class="text-sm font-semibold text-gray-600 mt-1">Sábado, 15 de Noviembre, 2026</p>
+                        <p id="display-time" class="text-xs font-bold text-boy1-dark mt-0.5">3:30 PM - 7:00 PM</p>
+                    </div>
+                </div>
+
+                <!-- Ubicación -->
+                <div class="flex items-start gap-4 p-4 rounded-2xl bg-teal-50 border border-teal-200">
+                    <div class="p-3 bg-boy2 text-white rounded-2xl shadow-md">
+                        <i class="fa-solid fa-map-location-dot text-2xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="title-font font-bold text-gray-800 text-lg">Lugar de la Misión</h4>
+                        <p id="display-location" class="text-sm font-semibold text-gray-600 mt-1">Salón Super Kids, Av. Siempreviva #123</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Acción de Mapa -->
+            <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+                <a id="btn-map" href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="btn-bounce bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-2xl shadow-md text-center flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-route"></i> Abrir en Google Maps
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Confirmación RSVP (WhatsApp) -->
+    <section class="max-w-xl mx-auto px-4 my-8 z-20 relative text-center">
+        <div class="bg-gradient-to-r from-sky-600 via-teal-600 to-sky-700 text-white rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+            <!-- Adornos de Fondo -->
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+            
+            <i class="fa-solid fa-gamepad text-4xl mb-3 text-party-yellow"></i>
+            <h3 class="title-font text-2xl sm:text-3xl font-bold mb-2">¡Confirma tu Asistencia!</h3>
+            <p class="text-sky-100 text-sm mb-6">Confírmanos para tener listas tus capas de superhéroe y sorpresas.</p>
+
+            <form id="rsvp-form" onsubmit="sendWhatsAppRSVP(event)" class="space-y-4 max-w-md mx-auto">
+                <input type="text" id="guest-name" required placeholder="Nombre de tu familia / Invitado" class="w-full px-4 py-3 rounded-2xl text-gray-800 focus:outline-none focus:ring-4 focus:ring-party-yellow text-sm font-semibold">
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <select id="guest-status" class="px-4 py-3 rounded-2xl text-gray-800 focus:outline-none focus:ring-4 focus:ring-party-yellow text-sm font-semibold">
+                        <option value="¡Sí, asistiremos con gusto!">¡Sí asistiremos!</option>
+                        <option value="Lo sentimos, no podremos ir">No podremos ir</option>
+                    </select>
+                    <input type="number" id="guest-count" min="1" max="10" value="2" required placeholder="Personas" class="px-4 py-3 rounded-2xl text-gray-800 focus:outline-none focus:ring-4 focus:ring-party-yellow text-sm font-semibold">
+                </div>
+
+                <button type="submit" class="btn-bounce w-full bg-party-yellow hover:bg-yellow-400 text-gray-900 font-extrabold py-3.5 px-6 rounded-2xl shadow-lg flex items-center justify-center gap-2 text-base uppercase tracking-wider">
+                    <i class="fa-brands fa-whatsapp text-2xl text-green-700"></i> Enviar por WhatsApp
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs font-semibold text-gray-500 mt-12 z-20 relative">
+        <p>¡Te esperan Mateo y Lucas para celebrar juntos sus 3 años! 🚗⚽🎂</p>
+    </footer>
+
+    <!-- MODAL EDICIÓN DE DATOS -->
+    <div id="edit-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative">
+            <button onclick="toggleEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+
+            <h3 class="title-font text-2xl font-bold text-sky-700 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-sliders"></i> Personalizar Datos de los Mellizos
+            </h3>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Nombre Niño 1</label>
+                    <input type="text" id="edit-twin1-name" value="Mateo" class="w-full border rounded-xl p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Nombre Niño 2</label>
+                    <input type="text" id="edit-twin2-name" value="Lucas" class="w-full border rounded-xl p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Fecha del Evento</label>
+                    <input type="date" id="edit-date" value="2026-11-15" class="w-full border rounded-xl p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Hora de la Fiesta</label>
+                    <input type="text" id="edit-time" value="3:30 PM - 7:00 PM" class="w-full border rounded-xl p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Dirección / Lugar</label>
+                    <input type="text" id="edit-location" value="Salón Super Kids, Av. Siempreviva #123" class="w-full border rounded-xl p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Teléfono WhatsApp para Confirmaciones (con código de país)</label>
+                    <input type="tel" id="edit-phone" value="1234567890" placeholder="Ej: 5215512345678" class="w-full border rounded-xl p-2.5 text-sm">
+                </div>
+            </div>
+
+            <div class="mt-6 flex gap-3">
+                <button onclick="saveCustomData()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl shadow">
+                    Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de Interactividad y Animaciones -->
+    <script>
+        // Variables globales de datos
+        let eventDate = new Date("2026-11-15T15:30:00");
+        let whatsappPhone = "1234567890";
+
+        // Girable de Tarjetas 3D
+        function flipCard(cardElement) {
+            const inner = cardElement.querySelector('.card-inner');
+            inner.classList.toggle('rotate-y-180');
+        }
+
+        // Sistema de Confeti Animado (Canvas)
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const confettiCount = 80;
+        const confettiColors = ['#0284C7', '#0D9488', '#FBBF24', '#84CC16', '#F97316'];
+        const confettiParticles = [];
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 8 + 4;
+                this.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                this.speedY = Math.random() * 3 + 1.5;
+                this.speedX = Math.random() * 2 - 1;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 10 - 5;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotationSpeed;
+                if (this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < confettiCount; i++) {
+            confettiParticles.push(new Particle());
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            confettiParticles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateConfetti);
+        }
+        animateConfetti();
+
+        // Generador de Globos Flotantes Interactivos
+        function createBalloons() {
+            const container = document.getElementById('balloon-container');
+            const colors = ['#0284C7', '#0D9488', '#FBBF24', '#84CC16', '#F97316'];
+
+            for (let i = 0; i < 12; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                
+                // SVG de globo incorporado
+                const color = colors[i % colors.length];
+                balloon.innerHTML = `
+                    <svg width="60" height="80" viewBox="0 0 60 80">
+                        <ellipse cx="30" cy="35" rx="25" ry="30" fill="${color}" />
+                        <polygon points="30,65 25,72 35,72" fill="${color}" />
+                        <path d="M 30 72 Q 25 80 30 90" stroke="#777" stroke-width="2" fill="none"/>
+                    </svg>
+                `;
+
+                balloon.style.left = `${Math.random() * 90}%`;
+                balloon.style.animationDelay = `${Math.random() * 8}s`;
+                balloon.style.animationDuration = `${10 + Math.random() * 6}s`;
+
+                // Reventar globo al tocar/clic
+                balloon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    balloon.style.transform = 'scale(1.5)';
+                    balloon.style.opacity = '0';
+                    setTimeout(() => balloon.remove(), 150);
+                });
+
+                container.appendChild(balloon);
+            }
+        }
+        createBalloons();
+
+        // Cuenta Regresiva
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+
+            if (distance < 0) {
+                document.getElementById('countdown-days').innerText = "00";
+                document.getElementById('countdown-hours').innerText = "00";
+                document.getElementById('countdown-minutes').innerText = "00";
+                document.getElementById('countdown-seconds').innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown-days').innerText = days < 10 ? '0' + days : days;
+            document.getElementById('countdown-hours').innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById('countdown-minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('countdown-seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Envío RSVP por WhatsApp
+        function sendWhatsAppRSVP(event) {
+            event.preventDefault();
+            const name = document.getElementById('guest-name').value;
+            const status = document.getElementById('guest-status').value;
+            const count = document.getElementById('guest-count').value;
+
+            const twin1 = document.getElementById('display-twin1-name').innerText;
+            const twin2 = document.getElementById('display-twin2-name').innerText;
+
+            const text = `¡Hola! Confirmación para el cumpleaños #3 de los mellizos ${twin1} y ${twin2}:%0A%0A` +
+                         `👤 *Invitado:* ${name}%0A` +
+                         `💬 *Respuesta:* ${status}%0A` +
+                         `👥 *Cantidad de Asistentes:* ${count}`;
+
+            window.open(`https://wa.me/${whatsappPhone}?text=${text}`, '_blank');
+        }
+
+        // Modal y Personalización
+        function toggleEditModal() {
+            const modal = document.getElementById('edit-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function saveCustomData() {
+            const twin1 = document.getElementById('edit-twin1-name').value;
+            const twin2 = document.getElementById('edit-twin2-name').value;
+            const dateVal = document.getElementById('edit-date').value;
+            const timeVal = document.getElementById('edit-time').value;
+            const locVal = document.getElementById('edit-location').value;
+            whatsappPhone = document.getElementById('edit-phone').value;
+
+            if (twin1) document.getElementById('display-twin1-name').innerText = twin1;
+            if (twin2) document.getElementById('display-twin2-name').innerText = twin2;
+            if (timeVal) document.getElementById('display-time').innerText = timeVal;
+            if (locVal) {
+                document.getElementById('display-location').innerText = locVal;
+                document.getElementById('btn-map').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locVal)}`;
+            }
+
+            if (dateVal) {
+                const [year, month, day] = dateVal.split('-');
+                eventDate = new Date(year, month - 1, day, 15, 30);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = eventDate.toLocaleDateString('es-ES', options);
+                document.getElementById('display-date').innerText = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+                updateCountdown();
+            }
+
+            toggleEditModal();
+        }
+    </script>
+</body>
+</html>
