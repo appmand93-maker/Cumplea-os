@@ -255,7 +255,7 @@
 
     @keyframes floatPup {
       0% { transform: translateY(0px) scale(1); }
-      100% { transform: translateY(-12px) scale(1.04); }
+      10% { transform: translateY(-12px) scale(1.04); }
     }
 
     /* Seccion Event Details */
@@ -398,7 +398,9 @@
       border-radius: 25px;
       padding: 25px;
       width: 100%;
-      max-width: 450px;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
       position: relative;
       box-shadow: 0 15px 30px rgba(0,0,0,0.2);
     }
@@ -412,23 +414,34 @@
       color: #999;
     }
 
+    .form-section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--paw-blue);
+      border-bottom: 2px solid var(--paw-yellow);
+      padding-bottom: 4px;
+      margin: 15px 0 10px 0;
+      text-transform: uppercase;
+    }
+
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       font-weight: 600;
       color: var(--paw-dark-blue);
+      font-size: 0.9rem;
     }
 
     .form-group input, .form-group select {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       border: 2px solid #ddd;
       border-radius: 12px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       outline: none;
     }
 
@@ -468,32 +481,32 @@
         <div class="paw-badge">
           <i class="fa-solid fa-paw"></i>
         </div>
-        <h1 class="main-title">¡Misión Cumpleaños!</h1>
-        <div class="subtitle-tag">🐾 MELLIZOS AL RESCATE • 3 AÑOS 🐾</div>
+        <h1 class="main-title" id="mainTitleText">¡Misión Cumpleaños!</h1>
+        <div class="subtitle-tag" id="subtitleTagText">🐾 MELLIZOS AL RESCATE • 3 AÑOS 🐾</div>
       </div>
 
       <!-- Tarjetas de los Mellizos -->
       <div class="twins-card-container">
         
-        <!-- Mellizo 1 (Chase) -->
+        <!-- Mellizo 1 -->
         <div class="twin-card" onclick="triggerPartyEffect()">
           <div class="photo-frame">
             <img id="imgTwin1" src="https://images.unsplash.com/photo-1543332164-6e82f355badc?auto=format&fit=crop&q=80&w=400" alt="Foto Mellizo 1">
           </div>
           <div class="twin-name" id="nameTwin1">Mateo</div>
-          <div class="twin-role">¡Cachorro Chase! 🚓</div>
+          <div class="twin-role" id="roleTwin1">¡Cachorro Chase! 🚓</div>
           <div class="role-badge">
             <i class="fa-solid fa-shield-dog" style="color: var(--paw-blue);"></i> Líder del Equipo
           </div>
         </div>
 
-        <!-- Mellizo 2 (Marshall) -->
+        <!-- Mellizo 2 -->
         <div class="twin-card card-red" onclick="triggerPartyEffect()">
           <div class="photo-frame">
             <img id="imgTwin2" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=400" alt="Foto Mellizo 2">
           </div>
           <div class="twin-name" id="nameTwin2">Lucas</div>
-          <div class="twin-role">¡Cachorro Marshall! 🚒</div>
+          <div class="twin-role" id="roleTwin2">¡Cachorro Marshall! 🚒</div>
           <div class="role-badge">
             <i class="fa-solid fa-fire-extinguisher" style="color: var(--paw-red);"></i> Modo Acción
           </div>
@@ -503,9 +516,9 @@
 
       <!-- Cachorros de la Patrulla Canina Animados Festejando en Base -->
       <div class="pups-footer-banner">
-        <img class="pup-anim chase" src="https://media.giphy.com/media/3o7TKSjRrfIPjeiVyM/giphy.gif" alt="Chase Paw Patrol Animado">
-        <img class="pup-anim rubble" src="https://media.giphy.com/media/l41YdQwPBEVlpxxQY/giphy.gif" alt="Rubble Paw Patrol Animado">
-        <img class="pup-anim marshall" src="https://media.giphy.com/media/l41YkFIiBxQdPfFdC/giphy.gif" alt="Marshall Paw Patrol Animado">
+        <img id="pupAnim1" class="pup-anim chase" src="https://media.giphy.com/media/3o7TKSjRrfIPjeiVyM/giphy.gif" alt="Chase Animado">
+        <img id="pupAnim2" class="pup-anim rubble" src="https://media.giphy.com/media/l41YdQwPBEVlpxxQY/giphy.gif" alt="Rubble Animado">
+        <img id="pupAnim3" class="pup-anim marshall" src="https://media.giphy.com/media/l41YkFIiBxQdPfFdC/giphy.gif" alt="Marshall Animado">
       </div>
     </div>
 
@@ -575,7 +588,7 @@
   </div>
 
   <!-- Botón Flotante para Editar Datos -->
-  <div class="edit-floating-btn" onclick="openEditModal()" title="Editar Invitación">
+  <div class="edit-floating-btn" onclick="openEditModal()" title="Editar Invitación Completa">
     <i class="fa-solid fa-pen"></i>
   </div>
 
@@ -606,34 +619,73 @@
     </div>
   </div>
 
-  <!-- Modal Editar Datos de la Invitación -->
+  <!-- Modal COMPLETO de Edición del Evento y Cachorros -->
   <div class="modal" id="editModal">
     <div class="modal-content">
       <span class="close-modal" onclick="closeEditModal()">&times;</span>
-      <h3 style="color: var(--paw-blue); margin-bottom: 15px;">Editar Datos del Evento</h3>
+      <h3 style="color: var(--paw-blue); margin-bottom: 10px;">⚙️ Panel Completo de Edición</h3>
       
+      <!-- Seccion Mellizo 1 -->
+      <div class="form-section-title">👦 Mellizo 1</div>
       <div class="form-group">
         <label>Nombre Mellizo 1:</label>
         <input type="text" id="inputTwin1" value="Mateo">
       </div>
       <div class="form-group">
-        <label>Foto URL Mellizo 1:</label>
-        <input type="text" id="inputImgTwin1" placeholder="Enlace de GitHub o web">
+        <label>Cachorro / Rol Mellizo 1:</label>
+        <input type="text" id="inputRoleTwin1" value="¡Cachorro Chase! 🚓">
       </div>
+      <div class="form-group">
+        <label>Foto URL Mellizo 1 (Link directo):</label>
+        <input type="text" id="inputImgTwin1" placeholder="URL de la foto de Mateo">
+      </div>
+
+      <!-- Seccion Mellizo 2 -->
+      <div class="form-section-title">👦 Mellizo 2</div>
       <div class="form-group">
         <label>Nombre Mellizo 2:</label>
         <input type="text" id="inputTwin2" value="Lucas">
       </div>
       <div class="form-group">
-        <label>Foto URL Mellizo 2:</label>
-        <input type="text" id="inputImgTwin2" placeholder="Enlace de GitHub o web">
+        <label>Cachorro / Rol Mellizo 2:</label>
+        <input type="text" id="inputRoleTwin2" value="¡Cachorro Marshall! 🚒">
       </div>
       <div class="form-group">
-        <label>Fecha del Cumpleaños:</label>
+        <label>Foto URL Mellizo 2 (Link directo):</label>
+        <input type="text" id="inputImgTwin2" placeholder="URL de la foto de Lucas">
+      </div>
+
+      <!-- Seccion Cachorros Animados (GIFs) -->
+      <div class="form-section-title">🐾 Cachorros Animados (GIFs)</div>
+      <div class="form-group">
+        <label>Cachorro Animado 1 (GIF URL):</label>
+        <input type="text" id="inputPupAnim1" value="https://media.giphy.com/media/3o7TKSjRrfIPjeiVyM/giphy.gif">
+      </div>
+      <div class="form-group">
+        <label>Cachorro Animado 2 (GIF URL):</label>
+        <input type="text" id="inputPupAnim2" value="https://media.giphy.com/media/l41YdQwPBEVlpxxQY/giphy.gif">
+      </div>
+      <div class="form-group">
+        <label>Cachorro Animado 3 (GIF URL):</label>
+        <input type="text" id="inputPupAnim3" value="https://media.giphy.com/media/l41YkFIiBxQdPfFdC/giphy.gif">
+      </div>
+
+      <!-- Seccion Detalle del Evento -->
+      <div class="form-section-title">🎉 Detalle de la Fiesta</div>
+      <div class="form-group">
+        <label>Título Principal:</label>
+        <input type="text" id="inputMainTitle" value="¡Misión Cumpleaños!">
+      </div>
+      <div class="form-group">
+        <label>Subtítulo / Edad:</label>
+        <input type="text" id="inputSubtitleTag" value="🐾 MELLIZOS AL RESCATE • 3 AÑOS 🐾">
+      </div>
+      <div class="form-group">
+        <label>Fecha Texto:</label>
         <input type="text" id="inputDate" value="Sábado, 15 de Noviembre">
       </div>
       <div class="form-group">
-        <label>Hora:</label>
+        <label>Hora Texto:</label>
         <input type="text" id="inputTime" value="3:00 PM">
       </div>
       <div class="form-group">
@@ -641,12 +693,20 @@
         <input type="text" id="inputLocation" value="Cuartel General de Fiestas (Calle Principal #123)">
       </div>
       <div class="form-group">
+        <label>Link de Google Maps / Waze:</label>
+        <input type="text" id="inputMapsUrl" value="https://maps.google.com">
+      </div>
+      <div class="form-group">
+        <label>Fecha y Hora Exacta para Contador (AAAA-MM-DDTHH:MM):</label>
+        <input type="datetime-local" id="inputTargetDateTime">
+      </div>
+      <div class="form-group">
         <label>Teléfono WhatsApp (Con código de país):</label>
         <input type="text" id="inputPhone" value="50370000000">
       </div>
 
-      <button class="btn-action btn-maps" onclick="saveEventDetails()">
-        Guardar Cambios <i class="fa-solid fa-floppy-disk"></i>
+      <button class="btn-action btn-maps" onclick="saveEventDetails()" style="margin-top: 15px;">
+        Guardar Todos los Cambios <i class="fa-solid fa-floppy-disk"></i>
       </button>
     </div>
   </div>
@@ -654,10 +714,15 @@
   <script>
     let config = {
       twin1: "Mateo",
+      role1: "¡Cachorro Chase! 🚓",
       twin2: "Lucas",
+      role2: "¡Cachorro Marshall! 🚒",
+      mainTitle: "¡Misión Cumpleaños!",
+      subtitleTag: "🐾 MELLIZOS AL RESCATE • 3 AÑOS 🐾",
       dateText: "Sábado, 15 de Noviembre",
       timeText: "3:00 PM",
       locationText: "Cuartel General de Fiestas (Calle Principal #123)",
+      mapsUrl: "https://maps.google.com",
       phone: "50370000000",
       targetDate: new Date().getTime() + (7 * 24 * 60 * 60 * 1000)
     };
@@ -687,20 +752,42 @@
 
     function saveEventDetails() {
       config.twin1 = id('inputTwin1').value || config.twin1;
+      config.role1 = id('inputRoleTwin1').value || config.role1;
       config.twin2 = id('inputTwin2').value || config.twin2;
+      config.role2 = id('inputRoleTwin2').value || config.role2;
+
+      config.mainTitle = id('inputMainTitle').value || config.mainTitle;
+      config.subtitleTag = id('inputSubtitleTag').value || config.subtitleTag;
+
       config.dateText = id('inputDate').value || config.dateText;
       config.timeText = id('inputTime').value || config.timeText;
       config.locationText = id('inputLocation').value || config.locationText;
+      config.mapsUrl = id('inputMapsUrl').value || config.mapsUrl;
       config.phone = id('inputPhone').value || config.phone;
 
-      if(id('inputImgTwin1').value) id('imgTwin1').src = id('inputImgTwin1').value;
-      if(id('inputImgTwin2').value) id('imgTwin2').src = id('inputImgTwin2').value;
+      if (id('inputTargetDateTime').value) {
+        config.targetDate = new Date(id('inputTargetDateTime').value).getTime();
+      }
+
+      if (id('inputImgTwin1').value) id('imgTwin1').src = id('inputImgTwin1').value;
+      if (id('inputImgTwin2').value) id('imgTwin2').src = id('inputImgTwin2').value;
+
+      if (id('inputPupAnim1').value) id('pupAnim1').src = id('inputPupAnim1').value;
+      if (id('inputPupAnim2').value) id('pupAnim2').src = id('inputPupAnim2').value;
+      if (id('inputPupAnim3').value) id('pupAnim3').src = id('inputPupAnim3').value;
 
       id('nameTwin1').innerText = config.twin1;
+      id('roleTwin1').innerText = config.role1;
       id('nameTwin2').innerText = config.twin2;
+      id('roleTwin2').innerText = config.role2;
+
+      id('mainTitleText').innerText = config.mainTitle;
+      id('subtitleTagText').innerText = config.subtitleTag;
+
       id('eventDateText').innerText = config.dateText;
       id('eventTimeText').innerText = config.timeText;
       id('eventLocationText').innerText = config.locationText;
+      id('mapsBtn').href = config.mapsUrl;
 
       closeEditModal();
       triggerPartyEffect();
