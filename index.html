@@ -1,566 +1,691 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Cumpleaños #3 de los Mellizos!</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fonts: Fredoka & Quicksand para toque infantil y legible -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        boy1: {
-                            light: '#E0F2FE',
-                            DEFAULT: '#0284C7',
-                            dark: '#0369A1'
-                        },
-                        boy2: {
-                            light: '#CCFBF1',
-                            DEFAULT: '#0D9488',
-                            dark: '#0F766E'
-                        },
-                        party: {
-                            yellow: '#FBBF24',
-                            lime: '#84CC16',
-                            orange: '#F97316',
-                            purple: '#8B5CF6'
-                        }
-                    },
-                    fontFamily: {
-                        fredoka: ['Fredoka', 'sans-serif'],
-                        quicksand: ['Quicksand', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Misión Cumpleaños PAW Patrol! 🐾 3 Años de Mellizos</title>
+  
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    <style>
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #e0e7ff 50%, #ccfbf1 100%);
-            overflow-x: hidden;
-        }
+  <style>
+    :root {
+      --paw-blue: #0055B8;
+      --paw-red: #E31837;
+      --paw-yellow: #FFC72C;
+      --paw-light-blue: #00A3E0;
+      --paw-dark-blue: #002D62;
+      --paw-bg: #E8F4F8;
+    }
 
-        .title-font {
-            font-family: 'Fredoka', sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Fredoka', sans-serif;
+    }
 
-        /* Canvas de Confeti */
-        #confetti-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 50;
-        }
+    body {
+      background-color: var(--paw-bg);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 85, 184, 0.08) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(227, 24, 55, 0.08) 0%, transparent 20%);
+      color: #333;
+      overflow-x: hidden;
+      padding-bottom: 50px;
+    }
 
-        /* Efecto Card Flip 3D */
-        .perspective-1000 {
-            perspective: 1000px;
-        }
-        .transform-style-3d {
-            transform-style: preserve-3d;
-        }
-        .backface-hidden {
-            backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-            transform: rotateY(180deg);
-        }
+    /* Fondo animado con Huellas */
+    .paws-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
 
-        /* Globos Flotantes */
-        .balloon {
-            position: absolute;
-            bottom: -100px;
-            opacity: 0.85;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-            animation: floatUp 12s infinite linear;
-            z-index: 10;
-        }
-        .balloon:hover {
-            transform: scale(1.15);
-        }
+    .paw-icon {
+      position: absolute;
+      color: rgba(0, 85, 184, 0.12);
+      animation: floatPaw 12s linear infinite;
+    }
 
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0.9;
-            }
-            50% {
-                transform: translateY(-60vh) rotate(10deg);
-            }
-            100% {
-                transform: translateY(-120vh) rotate(-10deg);
-                opacity: 0.2;
-            }
-        }
+    @keyframes floatPaw {
+      0% { transform: translateY(105vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
 
-        /* Animación de pulso resplandeciente */
-        @keyframes glow {
-            0%, 100% { filter: drop-shadow(0 0 15px rgba(2, 132, 199, 0.6)); }
-            50% { filter: drop-shadow(0 0 25px rgba(13, 148, 136, 0.8)); }
-        }
-        .glow-effect {
-            animation: glow 3s infinite ease-in-out;
-        }
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 20px 15px;
+      position: relative;
+      z-index: 10;
+    }
 
-        /* Estilo para los botones principales */
-        .btn-bounce {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .btn-bounce:hover {
-            transform: translateY(-4px) scale(1.03);
-        }
-        .btn-bounce:active {
-            transform: translateY(2px) scale(0.98);
-        }
-    </style>
+    /* Header Banner */
+    .badge-header {
+      text-align: center;
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .paw-badge {
+      width: 110px;
+      height: 110px;
+      background: linear-gradient(135deg, var(--paw-red), #B3001B);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      margin: 0 auto 15px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(227, 24, 55, 0.4);
+      animation: pulseBadge 2s infinite ease-in-out;
+      border: 4px solid var(--paw-yellow);
+    }
+
+    @keyframes pulseBadge {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    .paw-badge i {
+      font-size: 55px;
+      color: var(--paw-yellow);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    .main-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--paw-blue);
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1);
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    .subtitle-tag {
+      display: inline-block;
+      background-color: var(--paw-yellow);
+      color: var(--paw-dark-blue);
+      padding: 6px 20px;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-top: 10px;
+      box-shadow: 0 4px 10px rgba(255, 199, 44, 0.4);
+      border: 2px dashed var(--paw-blue);
+    }
+
+    /* Tarjeta de los Mellizos */
+    .twins-card-container {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+
+    .twin-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      width: calc(50% - 10px);
+      min-width: 260px;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      border: 4px solid var(--paw-light-blue);
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .twin-card:hover {
+      transform: translateY(-5deg);
+    }
+
+    .twin-card.card-red {
+      border-color: var(--paw-red);
+    }
+
+    .photo-frame {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      margin: 0 auto 15px auto;
+      border: 5px solid var(--paw-yellow);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      background: #eee;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .twin-name {
+      font-size: 1.6rem;
+      color: var(--paw-blue);
+      font-weight: 700;
+    }
+
+    .twin-role {
+      font-size: 0.95rem;
+      color: #666;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--paw-bg);
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 0.85rem;
+      color: var(--paw-dark-blue);
+      font-weight: 700;
+    }
+
+    /* Seccion Event Details */
+    .details-box {
+      background: white;
+      border-radius: 25px;
+      padding: 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      margin-bottom: 25px;
+      border: 3px solid #fff;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .detail-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .detail-icon {
+      width: 55px;
+      height: 55px;
+      border-radius: 18px;
+      background: var(--paw-blue);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .detail-icon.yellow { background: var(--paw-yellow); color: var(--paw-dark-blue); }
+    .detail-icon.red { background: var(--paw-red); color: white; }
+
+    .detail-content h4 {
+      font-size: 0.9rem;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    .detail-content p {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--paw-dark-blue);
+    }
+
+    /* Countdown */
+    .countdown-title {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--paw-blue);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .count-unit {
+      background: var(--paw-dark-blue);
+      color: white;
+      border-radius: 15px;
+      padding: 12px 5px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      border-bottom: 4px solid var(--paw-yellow);
+    }
+
+    .count-num {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .count-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    /* Botones de Accion */
+    .btn-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, #25D366, #1EBE5D);
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: transform 0.2s ease;
+    }
+
+    .btn-action:hover {
+      transform: scale(1.02);
+    }
+
+    .btn-maps {
+      background: linear-gradient(135deg, var(--paw-blue), var(--paw-dark-blue));
+      box-shadow: 0 6px 15px rgba(0, 85, 184, 0.4);
+    }
+
+    /* Modal / Formulario RSVP */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 25px;
+      padding: 25px;
+      width: 100%;
+      max-width: 450px;
+      position: relative;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: var(--paw-dark-blue);
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: var(--paw-blue);
+    }
+
+    .edit-floating-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--paw-yellow);
+      color: var(--paw-dark-blue);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      cursor: pointer;
+      z-index: 90;
+      border: 2px solid white;
+    }
+  </style>
 </head>
-<body class="min-h-screen text-gray-800 pb-12">
+<body>
 
-    <!-- Canvas para animación de Confeti -->
-    <canvas id="confetti-canvas"></canvas>
+  <!-- Fondo de Huellas Animadas -->
+  <div class="paws-bg" id="pawsBg"></div>
 
-    <!-- Contenedor de Globos Animados -->
-    <div id="balloon-container" class="fixed inset-0 pointer-events-none overflow-hidden z-10"></div>
-
-    <!-- Botón Flotante para Personalizar Datos -->
-    <button onclick="toggleEditModal()" class="fixed top-4 right-4 z-40 bg-white/90 backdrop-blur-md hover:bg-white text-gray-700 font-bold p-3 rounded-full shadow-lg border border-sky-300 flex items-center gap-2 transition duration-300">
-        <i class="fa-solid fa-pen-to-square text-boy1-dark"></i>
-        <span class="text-xs sm:text-sm hidden sm:inline">Editar Datos</span>
-    </button>
-
-    <!-- Encabezado Principal -->
-    <header class="relative pt-10 pb-6 text-center z-20 px-4">
-        <div class="inline-block bg-white/70 backdrop-blur-md px-6 py-2 rounded-full border border-sky-200 shadow-sm mb-4">
-            <span class="title-font text-sky-700 font-bold tracking-wide uppercase text-sm sm:text-base flex items-center gap-2 justify-center">
-                ⚡ ¡2 VECES MÁS DIVERSIÓN Y AVENTURA! ⚡
-            </span>
-        </div>
-        <h1 class="title-font text-4xl sm:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-boy1-dark via-party-lime to-boy2-dark glow-effect mb-2">
-            ¡LOS MELLIZOS CUMPLEN #3!
-        </h1>
-        <p class="text-lg sm:text-xl font-bold text-gray-600">
-            Nuestros dos campeones invitan a su gran fiesta de superhéroes
-        </p>
-    </header>
-
-    <!-- Tarjetas 3D Interactivas de los Mellizos Varones -->
-    <section class="max-w-4xl mx-auto px-4 my-6 z-20 relative">
-        <p class="text-center text-xs text-sky-700 font-bold mb-3 uppercase tracking-wider">
-            ✨ Toca las tarjetas para descubrir sus superpoderes ✨
-        </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <!-- Tarjeta Mellizo 1 (Mateo / Azul Superhéroe) -->
-            <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
-                <div class="card-inner relative w-full h-full duration-700 transform-style-3d shadow-xl rounded-3xl">
-                    <!-- Frente -->
-                    <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-sky-100 to-boy1-light border-4 border-boy1 rounded-3xl p-6 flex flex-col items-center justify-center backface-hidden shadow-inner">
-                        <div class="w-32 h-32 rounded-full border-4 border-white shadow-md overflow-hidden mb-4 bg-white flex items-center justify-center relative">
-                            <img id="img-twin1" src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=400" alt="Mellizo 1" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 right-0 bg-boy1 text-white text-xs px-2 py-0.5 rounded-tl-lg font-bold">#3</div>
-                        </div>
-                        <h3 id="display-twin1-name" class="title-font text-3xl font-bold text-boy1-dark">Mateo</h3>
-                        <p class="text-sm font-bold text-sky-600 mt-1">El Veloz del Equipo 🏎️</p>
-                        <span class="mt-4 text-xs font-bold bg-white/90 px-3 py-1 rounded-full text-sky-800 shadow-sm border border-sky-200">
-                            Toca para ver superpoder 🔄
-                        </span>
-                    </div>
-                    <!-- Reverso -->
-                    <div class="absolute inset-0 w-full h-full bg-boy1 text-white rounded-3xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-inner">
-                        <i class="fa-solid fa-bolt text-4xl text-party-yellow mb-3"></i>
-                        <h4 class="title-font text-2xl font-bold mb-2">Superpoderes de Mateo</h4>
-                        <p class="text-center text-sm leading-relaxed font-medium">
-                            ⚡ Velocidad sónica con sus autos de carreras.<br>
-                            🦖 Experto domador de dinosaurios.<br>
-                            ¡Le encanta comer pastel de chocolate!
-                        </p>
-                        <span class="mt-6 text-xs bg-white/20 px-3 py-1 rounded-full text-white font-bold">
-                            Toca para volver 🔄
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tarjeta Mellizo 2 (Lucas / Turquesa-Verde Aventurero) -->
-            <div class="perspective-1000 h-80 cursor-pointer group" onclick="flipCard(this)">
-                <div class="card-inner relative w-full h-full duration-700 transform-style-3d shadow-xl rounded-3xl">
-                    <!-- Frente -->
-                    <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-teal-100 to-boy2-light border-4 border-boy2 rounded-3xl p-6 flex flex-col items-center justify-center backface-hidden shadow-inner">
-                        <div class="w-32 h-32 rounded-full border-4 border-white shadow-md overflow-hidden mb-4 bg-white flex items-center justify-center relative">
-                            <img id="img-twin2" src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=400" alt="Mellizo 2" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 right-0 bg-boy2 text-white text-xs px-2 py-0.5 rounded-tl-lg font-bold">#3</div>
-                        </div>
-                        <h3 id="display-twin2-name" class="title-font text-3xl font-bold text-boy2-dark">Lucas</h3>
-                        <p class="text-sm font-bold text-teal-600 mt-1">El Gran Explorador ⚽</p>
-                        <span class="mt-4 text-xs font-bold bg-white/90 px-3 py-1 rounded-full text-teal-800 shadow-sm border border-teal-200">
-                            Toca para ver superpoder 🔄
-                        </span>
-                    </div>
-                    <!-- Reverso -->
-                    <div class="absolute inset-0 w-full h-full bg-boy2 text-white rounded-3xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-inner">
-                        <i class="fa-solid fa-shield-halved text-4xl text-party-yellow mb-3"></i>
-                        <h4 class="title-font text-2xl font-bold mb-2">Superpoderes de Lucas</h4>
-                        <p class="text-center text-sm leading-relaxed font-medium">
-                            ⚽ Tiros imparables con la pelota.<br>
-                            🦸‍♂️ Capa invisibilidad para jugar a las atrapadas.<br>
-                            ¡Listo para saltar en el inflable!
-                        </p>
-                        <span class="mt-6 text-xs bg-white/20 px-3 py-1 rounded-full text-white font-bold">
-                            Toca para volver 🔄
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Seccion de Cuenta Regresiva -->
-    <section class="max-w-xl mx-auto px-4 my-8 z-20 relative">
-        <div class="bg-white/85 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white text-center">
-            <h3 class="title-font text-xl font-bold text-gray-700 mb-4 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-stopwatch text-boy1"></i> Cuenta Regresiva para la Misión #3
-            </h3>
-            <div class="grid grid-cols-4 gap-2 sm:gap-4">
-                <div class="bg-gradient-to-b from-sky-100 to-white p-3 rounded-2xl border border-sky-300 shadow-sm">
-                    <span id="countdown-days" class="title-font text-2xl sm:text-4xl font-extrabold text-boy1-dark">00</span>
-                    <span class="block text-xs font-bold text-gray-500 uppercase mt-1">Días</span>
-                </div>
-                <div class="bg-gradient-to-b from-teal-100 to-white p-3 rounded-2xl border border-teal-300 shadow-sm">
-                    <span id="countdown-hours" class="title-font text-2xl sm:text-4xl font-extrabold text-boy2-dark">00</span>
-                    <span class="block text-xs font-bold text-gray-500 uppercase mt-1">Horas</span>
-                </div>
-                <div class="bg-gradient-to-b from-yellow-100 to-white p-3 rounded-2xl border border-yellow-300 shadow-sm">
-                    <span id="countdown-minutes" class="title-font text-2xl sm:text-4xl font-extrabold text-party-orange">00</span>
-                    <span class="block text-xs font-bold text-gray-500 uppercase mt-1">Min</span>
-                </div>
-                <div class="bg-gradient-to-b from-lime-100 to-white p-3 rounded-2xl border border-lime-300 shadow-sm">
-                    <span id="countdown-seconds" class="title-font text-2xl sm:text-4xl font-extrabold text-party-lime">00</span>
-                    <span class="block text-xs font-bold text-gray-500 uppercase mt-1">Seg</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Detalles del Evento -->
-    <section class="max-w-2xl mx-auto px-4 my-8 z-20 relative">
-        <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-white">
-            <h2 class="title-font text-2xl sm:text-3xl font-bold text-center text-sky-800 mb-6 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-location-crosshairs text-boy2"></i> ¿Cuándo y Dónde?
-            </h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <!-- Fecha y Hora -->
-                <div class="flex items-start gap-4 p-4 rounded-2xl bg-sky-50 border border-sky-200">
-                    <div class="p-3 bg-boy1 text-white rounded-2xl shadow-md">
-                        <i class="fa-solid fa-calendar-check text-2xl"></i>
-                    </div>
-                    <div>
-                        <h4 class="title-font font-bold text-gray-800 text-lg">Fecha y Hora</h4>
-                        <p id="display-date" class="text-sm font-semibold text-gray-600 mt-1">Sábado, 15 de Noviembre, 2026</p>
-                        <p id="display-time" class="text-xs font-bold text-boy1-dark mt-0.5">3:30 PM - 7:00 PM</p>
-                    </div>
-                </div>
-
-                <!-- Ubicación -->
-                <div class="flex items-start gap-4 p-4 rounded-2xl bg-teal-50 border border-teal-200">
-                    <div class="p-3 bg-boy2 text-white rounded-2xl shadow-md">
-                        <i class="fa-solid fa-map-location-dot text-2xl"></i>
-                    </div>
-                    <div>
-                        <h4 class="title-font font-bold text-gray-800 text-lg">Lugar de la Misión</h4>
-                        <p id="display-location" class="text-sm font-semibold text-gray-600 mt-1">Salón Super Kids, Av. Siempreviva #123</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Botones de Acción de Mapa -->
-            <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-                <a id="btn-map" href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="btn-bounce bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-2xl shadow-md text-center flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-route"></i> Abrir en Google Maps
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Confirmación RSVP (WhatsApp) -->
-    <section class="max-w-xl mx-auto px-4 my-8 z-20 relative text-center">
-        <div class="bg-gradient-to-r from-sky-600 via-teal-600 to-sky-700 text-white rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-            <!-- Adornos de Fondo -->
-            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
-            
-            <i class="fa-solid fa-gamepad text-4xl mb-3 text-party-yellow"></i>
-            <h3 class="title-font text-2xl sm:text-3xl font-bold mb-2">¡Confirma tu Asistencia!</h3>
-            <p class="text-sky-100 text-sm mb-6">Confírmanos para tener listas tus capas de superhéroe y sorpresas.</p>
-
-            <form id="rsvp-form" onsubmit="sendWhatsAppRSVP(event)" class="space-y-4 max-w-md mx-auto">
-                <input type="text" id="guest-name" required placeholder="Nombre de tu familia / Invitado" class="w-full px-4 py-3 rounded-2xl text-gray-800 focus:outline-none focus:ring-4 focus:ring-party-yellow text-sm font-semibold">
-                
-                <div class="grid grid-cols-2 gap-3">
-                    <select id="guest-status" class="px-4 py-3 rounded-2xl text-gray-800 focus:outline-none focus:ring-4 focus:ring-party-yellow text-sm font-semibold">
-                        <option value="¡Sí, asistiremos con gusto!">¡Sí asistiremos!</option>
-                        <option value="Lo sentimos, no podremos ir">No podremos ir</option>
-                    </select>
-                    <input type="number" id="guest-count" min="1" max="10" value="2" required placeholder="Personas" class="px-4 py-3 rounded-2xl text-gray-800 focus:outline-none focus:ring-4 focus:ring-party-yellow text-sm font-semibold">
-                </div>
-
-                <button type="submit" class="btn-bounce w-full bg-party-yellow hover:bg-yellow-400 text-gray-900 font-extrabold py-3.5 px-6 rounded-2xl shadow-lg flex items-center justify-center gap-2 text-base uppercase tracking-wider">
-                    <i class="fa-brands fa-whatsapp text-2xl text-green-700"></i> Enviar por WhatsApp
-                </button>
-            </form>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="text-center text-xs font-semibold text-gray-500 mt-12 z-20 relative">
-        <p>¡Te esperan Mateo y Lucas para celebrar juntos sus 3 años! 🚗⚽🎂</p>
-    </footer>
-
-    <!-- MODAL EDICIÓN DE DATOS -->
-    <div id="edit-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative">
-            <button onclick="toggleEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-                <i class="fa-solid fa-xmark text-2xl"></i>
-            </button>
-
-            <h3 class="title-font text-2xl font-bold text-sky-700 mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-sliders"></i> Personalizar Datos de los Mellizos
-            </h3>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">Nombre Niño 1</label>
-                    <input type="text" id="edit-twin1-name" value="Mateo" class="w-full border rounded-xl p-2.5 text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">Nombre Niño 2</label>
-                    <input type="text" id="edit-twin2-name" value="Lucas" class="w-full border rounded-xl p-2.5 text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">Fecha del Evento</label>
-                    <input type="date" id="edit-date" value="2026-11-15" class="w-full border rounded-xl p-2.5 text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">Hora de la Fiesta</label>
-                    <input type="text" id="edit-time" value="3:30 PM - 7:00 PM" class="w-full border rounded-xl p-2.5 text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">Dirección / Lugar</label>
-                    <input type="text" id="edit-location" value="Salón Super Kids, Av. Siempreviva #123" class="w-full border rounded-xl p-2.5 text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">Teléfono WhatsApp para Confirmaciones (con código de país)</label>
-                    <input type="tel" id="edit-phone" value="1234567890" placeholder="Ej: 5215512345678" class="w-full border rounded-xl p-2.5 text-sm">
-                </div>
-            </div>
-
-            <div class="mt-6 flex gap-3">
-                <button onclick="saveCustomData()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl shadow">
-                    Guardar Cambios
-                </button>
-            </div>
-        </div>
+  <div class="container">
+    
+    <!-- Encabezado PAW Patrol -->
+    <div class="badge-header">
+      <div class="paw-badge">
+        <i class="fa-solid fa-paw"></i>
+      </div>
+      <h1 class="main-title">¡Misión Cumpleaños!</h1>
+      <div class="subtitle-tag">🐾 MELLIZOS AL RESCATE • 3 AÑOS 🐾</div>
     </div>
 
-    <!-- Scripts de Interactividad y Animaciones -->
-    <script>
-        // Variables globales de datos
-        let eventDate = new Date("2026-11-15T15:30:00");
-        let whatsappPhone = "1234567890";
+    <!-- Tarjetas de los Mellizos -->
+    <div class="twins-card-container">
+      
+      <!-- Niño 1 (Chase) -->
+      <div class="twin-card">
+        <div class="photo-frame">
+          <img id="imgTwin1" src="https://images.unsplash.com/photo-1543332164-6e82f355badc?auto=format&fit=crop&q=80&w=400" alt="Foto Mellizo 1">
+        </div>
+        <div class="twin-name" id="nameTwin1">Mateo</div>
+        <div class="twin-role">¡Cachorro Chase! 🚓</div>
+        <div class="role-badge">
+          <i class="fa-solid fa-shield-dog" style="color: var(--paw-blue);"></i> Líder del Equipo
+        </div>
+      </div>
 
-        // Girable de Tarjetas 3D
-        function flipCard(cardElement) {
-            const inner = cardElement.querySelector('.card-inner');
-            inner.classList.toggle('rotate-y-180');
-        }
+      <!-- Niño 2 (Marshall) -->
+      <div class="twin-card card-red">
+        <div class="photo-frame">
+          <img id="imgTwin2" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=400" alt="Foto Mellizo 2">
+        </div>
+        <div class="twin-name" id="nameTwin2">Lucas</div>
+        <div class="twin-role">¡Cachorro Marshall! 🚒</div>
+        <div class="role-badge">
+          <i class="fa-solid fa-fire-extinguisher" style="color: var(--paw-red);"></i> Modo Acción
+        </div>
+      </div>
 
-        // Sistema de Confeti Animado (Canvas)
-        const canvas = document.getElementById('confetti-canvas');
-        const ctx = canvas.getContext('2d');
+    </div>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+    <!-- Detalles del Evento -->
+    <div class="details-box">
+      <div class="detail-item">
+        <div class="detail-icon">
+          <i class="fa-solid fa-calendar-star"></i>
+        </div>
+        <div class="detail-content">
+          <h4>Fecha de la Misión</h4>
+          <p id="eventDateText">Sábado, 15 de Noviembre</p>
+        </div>
+      </div>
 
-        const confettiCount = 80;
-        const confettiColors = ['#0284C7', '#0D9488', '#FBBF24', '#84CC16', '#F97316'];
-        const confettiParticles = [];
+      <div class="detail-item">
+        <div class="detail-icon yellow">
+          <i class="fa-solid fa-clock"></i>
+        </div>
+        <div class="detail-content">
+          <h4>Hora de Convocatoria</h4>
+          <p id="eventTimeText">3:00 PM</p>
+        </div>
+      </div>
 
-        class Particle {
-            constructor() {
-                this.reset();
-            }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height - canvas.height;
-                this.size = Math.random() * 8 + 4;
-                this.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
-                this.speedY = Math.random() * 3 + 1.5;
-                this.speedX = Math.random() * 2 - 1;
-                this.rotation = Math.random() * 360;
-                this.rotationSpeed = Math.random() * 10 - 5;
-            }
-            update() {
-                this.y += this.speedY;
-                this.x += this.speedX;
-                this.rotation += this.rotationSpeed;
-                if (this.y > canvas.height) {
-                    this.reset();
-                }
-            }
-            draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate((this.rotation * Math.PI) / 180);
-                ctx.fillStyle = this.color;
-                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
-                ctx.restore();
-            }
-        }
+      <div class="detail-item">
+        <div class="detail-icon red">
+          <i class="fa-solid fa-location-dot"></i>
+        </div>
+        <div class="detail-content">
+          <h4>Base de Operaciones (Lugar)</h4>
+          <p id="eventLocationText">Cuartel General de Fiestas (Calle Principal #123)</p>
+        </div>
+      </div>
+    </div>
 
-        for (let i = 0; i < confettiCount; i++) {
-            confettiParticles.push(new Particle());
-        }
+    <!-- Cuenta Regresiva -->
+    <div class="countdown-title">⏱️ TIEMPO RESTANTE PARA EL RESCATE</div>
+    <div class="countdown-grid">
+      <div class="count-unit">
+        <div class="count-num" id="days">00</div>
+        <div class="count-label">Días</div>
+      </div>
+      <div class="count-unit">
+        <div class="count-num" id="hours">00</div>
+        <div class="count-label">Horas</div>
+      </div>
+      <div class="count-unit">
+        <div class="count-num" id="minutes">00</div>
+        <div class="count-label">Min</div>
+      </div>
+      <div class="count-unit">
+        <div class="count-num" id="seconds">00</div>
+        <div class="count-label">Seg</div>
+      </div>
+    </div>
 
-        function animateConfetti() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            confettiParticles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            requestAnimationFrame(animateConfetti);
-        }
-        animateConfetti();
+    <!-- Botones de Acción -->
+    <button class="btn-action" onclick="openRSVPModal()">
+      <i class="fa-brands fa-whatsapp"></i> Confirmar Asistencia por WhatsApp
+    </button>
 
-        // Generador de Globos Flotantes Interactivos
-        function createBalloons() {
-            const container = document.getElementById('balloon-container');
-            const colors = ['#0284C7', '#0D9488', '#FBBF24', '#84CC16', '#F97316'];
+    <a id="mapsBtn" class="btn-action btn-maps" href="https://maps.google.com" target="_blank">
+      <i class="fa-solid fa-map-location-dot"></i> Ver Ubicación en GPS
+    </a>
 
-            for (let i = 0; i < 12; i++) {
-                const balloon = document.createElement('div');
-                balloon.className = 'balloon';
-                
-                // SVG de globo incorporado
-                const color = colors[i % colors.length];
-                balloon.innerHTML = `
-                    <svg width="60" height="80" viewBox="0 0 60 80">
-                        <ellipse cx="30" cy="35" rx="25" ry="30" fill="${color}" />
-                        <polygon points="30,65 25,72 35,72" fill="${color}" />
-                        <path d="M 30 72 Q 25 80 30 90" stroke="#777" stroke-width="2" fill="none"/>
-                    </svg>
-                `;
+  </div>
 
-                balloon.style.left = `${Math.random() * 90}%`;
-                balloon.style.animationDelay = `${Math.random() * 8}s`;
-                balloon.style.animationDuration = `${10 + Math.random() * 6}s`;
+  <!-- Botón Flotante para Editar Datos -->
+  <div class="edit-floating-btn" onclick="openEditModal()" title="Editar Invitación">
+    <i class="fa-solid fa-pen"></i>
+  </div>
 
-                // Reventar globo al tocar/clic
-                balloon.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    balloon.style.transform = 'scale(1.5)';
-                    balloon.style.opacity = '0';
-                    setTimeout(() => balloon.remove(), 150);
-                });
+  <!-- Modal Confirmación RSVP -->
+  <div class="modal" id="rsvpModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeRSVPModal()">&times;</span>
+      <h3 style="color: var(--paw-blue); margin-bottom: 15px;"> Confirmar Asistencia</h3>
+      
+      <div class="form-group">
+        <label>Nombre de tu familia o asistente:</label>
+        <input type="text" id="guestName" placeholder="Ej. Familia Pérez">
+      </div>
 
-                container.appendChild(balloon);
-            }
-        }
-        createBalloons();
+      <div class="form-group">
+        <label>¿Cuántos asistirán?</label>
+        <select id="guestCount">
+          <option value="1 persona">1 Persona</option>
+          <option value="2 personas">2 Personas</option>
+          <option value="3 personas">3 Personas</option>
+          <option value="4+ personas">4 o más personas</option>
+        </select>
+      </div>
 
-        // Cuenta Regresiva
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = eventDate - now;
+      <button class="btn-action" onclick="sendWhatsApp()">
+        Enviar Mensaje <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
 
-            if (distance < 0) {
-                document.getElementById('countdown-days').innerText = "00";
-                document.getElementById('countdown-hours').innerText = "00";
-                document.getElementById('countdown-minutes').innerText = "00";
-                document.getElementById('countdown-seconds').innerText = "00";
-                return;
-            }
+  <!-- Modal Editar Datos de la Invitación -->
+  <div class="modal" id="editModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeEditModal()">&times;</span>
+      <h3 style="color: var(--paw-blue); margin-bottom: 15px;">Editar Datos del Evento</h3>
+      
+      <div class="form-group">
+        <label>Nombre Mellizo 1:</label>
+        <input type="text" id="inputTwin1" value="Mateo">
+      </div>
+      <div class="form-group">
+        <label>Foto URL Mellizo 1:</label>
+        <input type="text" id="inputImgTwin1" placeholder="Enlace de GitHub o web">
+      </div>
+      <div class="form-group">
+        <label>Nombre Mellizo 2:</label>
+        <input type="text" id="inputTwin2" value="Lucas">
+      </div>
+      <div class="form-group">
+        <label>Foto URL Mellizo 2:</label>
+        <input type="text" id="inputImgTwin2" placeholder="Enlace de GitHub o web">
+      </div>
+      <div class="form-group">
+        <label>Fecha del Cumpleaños:</label>
+        <input type="text" id="inputDate" value="Sábado, 15 de Noviembre">
+      </div>
+      <div class="form-group">
+        <label>Hora:</label>
+        <input type="text" id="inputTime" value="3:00 PM">
+      </div>
+      <div class="form-group">
+        <label>Lugar / Dirección:</label>
+        <input type="text" id="inputLocation" value="Cuartel General de Fiestas (Calle Principal #123)">
+      </div>
+      <div class="form-group">
+        <label>Teléfono WhatsApp (Con código de país, ej. 50370000000):</label>
+        <input type="text" id="inputPhone" value="50370000000">
+      </div>
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      <button class="btn-action btn-maps" onclick="saveEventDetails()">
+        Guardar Cambios <i class="fa-solid fa-floppy-disk"></i>
+      </button>
+    </div>
+  </div>
 
-            document.getElementById('countdown-days').innerText = days < 10 ? '0' + days : days;
-            document.getElementById('countdown-hours').innerText = hours < 10 ? '0' + hours : hours;
-            document.getElementById('countdown-minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
-            document.getElementById('countdown-seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
-        }
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
+  <script>
+    // Datos editables por defecto
+    let config = {
+      twin1: "Mateo",
+      twin2: "Lucas",
+      dateText: "Sábado, 15 de Noviembre",
+      timeText: "3:00 PM",
+      locationText: "Cuartel General de Fiestas (Calle Principal #123)",
+      phone: "50370000000",
+      targetDate: new Date().getTime() + (7 * 24 * 60 * 60 * 1000) // 7 días desde hoy
+    };
 
-        // Envío RSVP por WhatsApp
-        function sendWhatsAppRSVP(event) {
-            event.preventDefault();
-            const name = document.getElementById('guest-name').value;
-            const status = document.getElementById('guest-status').value;
-            const count = document.getElementById('guest-count').value;
+    // Crear huellas flotantes de fondo
+    function createPaws() {
+      const container = id('pawsBg');
+      for (let i = 0; i < 15; i++) {
+        let paw = document.createElement('i');
+        paw.className = 'fa-solid fa-paw paw-icon';
+        paw.style.left = Math.random() * 100 + 'vw';
+        paw.style.animationDelay = (Math.random() * 10) + 's';
+        paw.style.fontSize = (Math.random() * 25 + 20) + 'px';
+        container.appendChild(paw);
+      }
+    }
 
-            const twin1 = document.getElementById('display-twin1-name').innerText;
-            const twin2 = document.getElementById('display-twin2-name').innerText;
+    function id(str) { return document.getElementById(str); }
 
-            const text = `¡Hola! Confirmación para el cumpleaños #3 de los mellizos ${twin1} y ${twin2}:%0A%0A` +
-                         `👤 *Invitado:* ${name}%0A` +
-                         `💬 *Respuesta:* ${status}%0A` +
-                         `👥 *Cantidad de Asistentes:* ${count}`;
+    // Modales
+    function openRSVPModal() { id('rsvpModal').classList.add('active'); }
+    function closeRSVPModal() { id('rsvpModal').classList.remove('active'); }
+    function openEditModal() { id('editModal').classList.add('active'); }
+    function closeEditModal() { id('editModal').classList.remove('active'); }
 
-            window.open(`https://wa.me/${whatsappPhone}?text=${text}`, '_blank');
-        }
+    // Guardar Ediciones
+    function saveEventDetails() {
+      config.twin1 = id('inputTwin1').value || config.twin1;
+      config.twin2 = id('inputTwin2').value || config.twin2;
+      config.dateText = id('inputDate').value || config.dateText;
+      config.timeText = id('inputTime').value || config.timeText;
+      config.locationText = id('inputLocation').value || config.locationText;
+      config.phone = id('inputPhone').value || config.phone;
 
-        // Modal y Personalización
-        function toggleEditModal() {
-            const modal = document.getElementById('edit-modal');
-            modal.classList.toggle('hidden');
-        }
+      if(id('inputImgTwin1').value) id('imgTwin1').src = id('inputImgTwin1').value;
+      if(id('inputImgTwin2').value) id('imgTwin2').src = id('inputImgTwin2').value;
 
-        function saveCustomData() {
-            const twin1 = document.getElementById('edit-twin1-name').value;
-            const twin2 = document.getElementById('edit-twin2-name').value;
-            const dateVal = document.getElementById('edit-date').value;
-            const timeVal = document.getElementById('edit-time').value;
-            const locVal = document.getElementById('edit-location').value;
-            whatsappPhone = document.getElementById('edit-phone').value;
+      id('nameTwin1').innerText = config.twin1;
+      id('nameTwin2').innerText = config.twin2;
+      id('eventDateText').innerText = config.dateText;
+      id('eventTimeText').innerText = config.timeText;
+      id('eventLocationText').innerText = config.locationText;
 
-            if (twin1) document.getElementById('display-twin1-name').innerText = twin1;
-            if (twin2) document.getElementById('display-twin2-name').innerText = twin2;
-            if (timeVal) document.getElementById('display-time').innerText = timeVal;
-            if (locVal) {
-                document.getElementById('display-location').innerText = locVal;
-                document.getElementById('btn-map').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locVal)}`;
-            }
+      closeEditModal();
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    }
 
-            if (dateVal) {
-                const [year, month, day] = dateVal.split('-');
-                eventDate = new Date(year, month - 1, day, 15, 30);
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                const formattedDate = eventDate.toLocaleDateString('es-ES', options);
-                document.getElementById('display-date').innerText = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-                updateCountdown();
-            }
+    // Enviar WhatsApp
+    function sendWhatsApp() {
+      const name = id('guestName').value;
+      const count = id('guestCount').value;
 
-            toggleEditModal();
-        }
-    </script>
+      if (!name) {
+        alert("Por favor escribe tu nombre.");
+        return;
+      }
+
+      const message = `¡Hola! Confirmo mi asistencia al cumpleaños #3 de ${config.twin1} y ${config.twin2} 🐾.%0A%0A👤 *Nombre:* ${encodeURIComponent(name)}%0A👥 *Asistentes:* ${encodeURIComponent(count)}`;
+      const url = `https://wa.me/${config.phone}?text=${message}`;
+      window.open(url, '_blank');
+      closeRSVPModal();
+    }
+
+    // Cuenta Regresiva
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = config.targetDate - now;
+
+      if (distance < 0) {
+        id('days').innerText = "00";
+        id('hours').innerText = "00";
+        id('minutes').innerText = "00";
+        id('seconds').innerText = "00";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      id('days').innerText = days < 10 ? '0' + days : days;
+      id('hours').innerText = hours < 10 ? '0' + hours : hours;
+      id('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+      id('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+    }
+
+    // Inicializar
+    window.onload = function() {
+      createPaws();
+      setInterval(updateCountdown, 1000);
+      confetti({ particleCount: 60, spread: 60, origin: { y: 0.7 } });
+    };
+  </script>
 </body>
 </html>
